@@ -52,7 +52,8 @@
         width: 600px;
 
         .content {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             padding: 20px;
             width: 100%;
             height: 100%;
@@ -60,7 +61,12 @@
             box-sizing: border-box;
 
             .messages-block {
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                gap: 20px;
                 height: 100%;
+                padding: 20px 0;
             }
 
             .input-block {
@@ -83,21 +89,21 @@
                 .send-btn {
                     width: 50px;
                     height: 50px;
-                    background-color: rgb(70, 164, 252);
+                    background-color: rgb(114, 187, 255);
                     border-radius: 15px;
                     transition: 0.2s;
 
                     &.--disabled {
-                        background-color: rgb(131, 131, 131);
+                        background-color: rgb(187, 187, 187);
 
                         &:hover {
-                            background-color: rgb(131, 131, 131);
+                            background-color: rgb(187, 187, 187);
                             cursor: default;
                         }
                     }
 
                     &:hover {
-                        background-color: rgb(23, 86, 146);
+                        background-color: rgb(58, 160, 255);
                         cursor: pointer;
                     }
                 }

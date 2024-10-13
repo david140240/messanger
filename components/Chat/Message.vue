@@ -15,6 +15,7 @@
 <style lang="scss" scoped>
     .c-message {
         display: flex;
+        justify-content: end;
 
         &.me {
             justify-content: end;
@@ -25,7 +26,7 @@
         }
 
         .content {
-            width: min-content;
+            width: auto;
             padding: 10px;
             background-color: white;
             border-radius: 10px;
