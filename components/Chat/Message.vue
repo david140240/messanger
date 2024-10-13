@@ -1,7 +1,13 @@
+<script setup lang="ts">
+    const props = defineProps({
+        text: String,
+    });
+</script>
+
 <template>
     <div class="c-message">
         <span class="content">
-            <span>сообщение</span>
+            <span>{{ props.text }}</span>
         </span>
     </div>
 </template>

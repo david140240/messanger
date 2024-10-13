@@ -1,12 +1,43 @@
+<script setup lang="ts">
+    const chatStore = useChatStore(),
+        data = reactive({
+            inputField: "",
+        }),
+        calculated = {
+            messages: computed(() => chatStore.data.messages),
+        },
+        methods = {
+            sendMessage: () => {
+                if (data.inputField.length) {
+                    chatStore.methods.addMessage(data.inputField);
+                    data.inputField = "";
+                }
+            },
+        };
+</script>
+
 <template>
     <div class="c-chat-field">
         <div class="content">
             <div class="messages-block">
-                <ChatMessage />
+                <ChatMessage
+                    v-for="item in calculated.messages.value"
+                    :text="item"
+                />
             </div>
             <div class="input-block">
-                <input class="chat-input" placeholder="Введите сообщение..." />
-                <div class="send-btn">
+                <input
+                    class="chat-input"
+                    placeholder="Введите сообщение..."
+                    v-model="data.inputField"
+                />
+                <div
+                    :class="[
+                        'send-btn',
+                        { '--disabled': !data.inputField.length },
+                    ]"
+                    @click="methods.sendMessage()"
+                >
                     <img />
                 </div>
             </div>
@@ -30,7 +61,6 @@
 
             .messages-block {
                 height: 100%;
-                background-color: rgb(144, 173, 255);
             }
 
             .input-block {
@@ -56,6 +86,15 @@
                     background-color: rgb(70, 164, 252);
                     border-radius: 15px;
                     transition: 0.2s;
+
+                    &.--disabled {
+                        background-color: rgb(131, 131, 131);
+
+                        &:hover {
+                            background-color: rgb(131, 131, 131);
+                            cursor: default;
+                        }
+                    }
 
                     &:hover {
                         background-color: rgb(23, 86, 146);
