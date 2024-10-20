@@ -24,12 +24,19 @@ const chatStore = useChatStore(),
 			data.idMessage = id;
 		},
 		saveChanges: (id: number | null) => {
-			chatStore.data.messages.forEach((item: string, index: number) => {
-				if (id === index) {
-					chatStore.data.messages.splice(index, 1, data.inputField);
-				}
-			});
+			if (data.inputField.length) {
+				chatStore.data.messages.forEach((item: string, index: number) => {
+					if (id === index) {
+						chatStore.data.messages.splice(index, 1, data.inputField);
+					}
+				});
+				data.inputField = '';
+				chatStore.data.isEditMode = false;
+			}
+		},
+		cancelEditMode: () => {
 			data.inputField = '';
+			chatStore.data.isEditMode = false;
 		},
 	};
 </script>
@@ -64,6 +71,13 @@ const chatStore = useChatStore(),
 					@click="methods.saveChanges(data.idMessage)"
 				>
 					save
+				</button>
+				<button
+					v-if="calculated.isEditMode.value"
+					class="edit-accept-btn"
+					@click="methods.cancelEditMode"
+				>
+					отмена
 				</button>
 			</div>
 		</div>

@@ -26,6 +26,10 @@ const props = defineProps<{
 				i === id ? chatStore.data.messages.splice(i, 1) : false;
 			});
 		},
+		copyText: () => {
+			navigator.clipboard.writeText(props.text);
+			data.isTooltipVisible = false;
+		},
 	};
 onMounted(() => {
 	methods.listener();
@@ -36,6 +40,7 @@ onMounted(() => {
 	<div class="c-message">
 		<div class="tooltip" v-if="data.isTooltipVisible">
 			<span class="option" @click="emit('edit', text, id)">Редактировать</span>
+			<span class="option" @click="methods.copyText">Копировать текст</span>
 			<span class="option --delete" @click="methods.deleteMessage(id)"
 				>Удалить</span
 			>
@@ -62,7 +67,7 @@ onMounted(() => {
 	}
 
 	.content {
-		width: min-content;
+		width: fit-content;
 		padding: 10px;
 		background-color: white;
 		border-radius: 10px;
@@ -79,7 +84,7 @@ onMounted(() => {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: min-content;
+	width: fit-content;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: 800;
 	font-size: 15px;
