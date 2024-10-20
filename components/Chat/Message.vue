@@ -4,7 +4,7 @@ const props = defineProps<{
 		id: number;
 	}>(),
 	emit = defineEmits<{
-		(e: 'edit', text: string): void;
+		(e: 'edit', text: string, id: number): void;
 	}>(),
 	chatStore = useChatStore(),
 	data = reactive({
@@ -35,7 +35,7 @@ onMounted(() => {
 <template>
 	<div class="c-message">
 		<div class="tooltip" v-if="data.isTooltipVisible">
-			<span class="option" @click="emit('edit', text)">Редактировать</span>
+			<span class="option" @click="emit('edit', text, id)">Редактировать</span>
 			<span class="option --delete" @click="methods.deleteMessage(id)"
 				>Удалить</span
 			>

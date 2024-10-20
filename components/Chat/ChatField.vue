@@ -3,6 +3,7 @@ const chatStore = useChatStore(),
 	refContent = useTemplateRef('content-ref'),
 	data = reactive({
 		inputField: '',
+		idMessage: null as number | null,
 	}),
 	calculated = {
 		messages: computed(() => chatStore.data.messages),
@@ -13,26 +14,24 @@ const chatStore = useChatStore(),
 			if (data.inputField.length) {
 				chatStore.methods.addMessage(data.inputField);
 				const height = refContent.value?.scrollHeight;
-				console.log(height);
 				refContent.value?.scrollTo(0, height as number);
 				data.inputField = '';
 			}
 		},
-		editMode: (text: string) => {
+		editMode: (text: string, id: number) => {
 			chatStore.data.isEditMode = true;
 			data.inputField = text;
+			data.idMessage = id;
 		},
-        // TODO доделать метод
-        saveChanges: (id: number) => {
-            chatStore.data.messages.forEach((item: string, index: number) => {
-                index === id ? item = chatStore.data.messages[index]
-            });
-        }
+		saveChanges: (id: number | null) => {
+			chatStore.data.messages.forEach((item: string, index: number) => {
+				if (id === index) {
+					chatStore.data.messages.splice(index, 1, data.inputField);
+				}
+			});
+			data.inputField = '';
+		},
 	};
-
-onMounted(() => {
-	console.log(refContent);
-});
 </script>
 
 <template>
@@ -40,6 +39,7 @@ onMounted(() => {
 		<div class="content">
 			<div class="messages-block" ref="content-ref">
 				<ChatMessage
+					@edit="methods.editMode"
 					v-for="(item, index) in calculated.messages.value"
 					:key="index"
 					:text="item"
@@ -58,7 +58,12 @@ onMounted(() => {
 				>
 					<img />
 				</div>
-				<div class="edit-accept-btn">Сохранить изменения</div>
+				<button
+					class="edit-accept-btn"
+					@click="methods.saveChanges(data.idMessage)"
+				>
+					Сохранить изменения
+				</button>
 			</div>
 		</div>
 	</div>
