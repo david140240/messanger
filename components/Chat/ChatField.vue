@@ -59,10 +59,11 @@ const chatStore = useChatStore(),
 					<img />
 				</div>
 				<button
+					v-if="calculated.isEditMode.value"
 					class="edit-accept-btn"
 					@click="methods.saveChanges(data.idMessage)"
 				>
-					Сохранить изменения
+					save
 				</button>
 			</div>
 		</div>
@@ -102,6 +103,10 @@ const chatStore = useChatStore(),
 			align-self: flex-end;
 			bottom: 5px;
 			width: 100%;
+
+			.edit-accept-btn {
+				width: 50px;
+			}
 
 			.chat-input {
 				font-size: 16px;
