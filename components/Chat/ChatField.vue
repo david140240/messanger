@@ -58,10 +58,11 @@ const chatStore = useChatStore(),
 					class="chat-input"
 					placeholder="Введите сообщение..."
 					v-model="data.inputField"
+					@keyup.enter="methods.sendMessage"
 				/>
 				<div
 					:class="['send-btn', { '--disabled': !data.inputField.length }]"
-					@click="methods.sendMessage()"
+					@click="methods.sendMessage"
 				>
 					<img />
 				</div>
