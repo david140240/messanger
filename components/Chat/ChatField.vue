@@ -4,6 +4,7 @@ const chatStore = useChatStore(),
 	data = reactive({
 		inputField: '',
 		idMessage: null as number | null,
+		idTooltip: null as number | null,
 	}),
 	calculated = {
 		messages: computed(() => chatStore.data.messages),
@@ -47,10 +48,12 @@ const chatStore = useChatStore(),
 			<div class="messages-block" ref="content-ref">
 				<ChatMessage
 					@edit="methods.editMode"
+					@contextmenu="data.idTooltip = index"
 					v-for="(item, index) in calculated.messages.value"
 					:key="index"
 					:text="item"
 					:id="index"
+					:id-tooltip="data.idTooltip"
 				/>
 			</div>
 			<div class="input-block">

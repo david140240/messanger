@@ -2,6 +2,7 @@
 const props = defineProps<{
 		text: string;
 		id: number;
+		idTooltip: number | null;
 	}>(),
 	emit = defineEmits<{
 		(e: 'edit', text: string, id: number): void;
@@ -9,6 +10,7 @@ const props = defineProps<{
 	chatStore = useChatStore(),
 	data = reactive({
 		isTooltipVisible: false,
+		myTooltip: null as null | number,
 	}),
 	calculated = {
 		isEditMode: computed(() => chatStore.data.isEditMode),
@@ -37,8 +39,11 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="c-message">
-		<div class="tooltip" v-if="data.isTooltipVisible">
+	<div
+		class="c-message"
+		@my-tooltip="(index: number) => (data.myTooltip = index)"
+	>
+		<div class="tooltip" v-if="idTooltip === id && data.isTooltipVisible">
 			<span class="option" @click="emit('edit', text, id)">Редактировать</span>
 			<span class="option" @click="methods.copyText">Копировать текст</span>
 			<span class="option --delete" @click="methods.deleteMessage(id)"
