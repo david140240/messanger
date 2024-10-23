@@ -1,6 +1,10 @@
 export const useChatStore = defineStore('chat', () => {
 	const data = reactive({
-		messages: ['a', 'b', '123'] as any,
+		messages: [
+			'Привет!',
+			'Как дела?!',
+			'Тестовое сообщение очень длинное ваще сильно сильно',
+		] as any,
 		isEditMode: false,
 	});
 
