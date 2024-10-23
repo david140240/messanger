@@ -3,7 +3,6 @@ export default defineNuxtPlugin(nuxtApp => {
 		mounted(el, binding) {
 			const clickHandler = (event: Event) => {
 				if (!(event.target === el || el.contains(event.target))) {
-					console.log('56');
 					binding.value(event);
 				}
 			};
