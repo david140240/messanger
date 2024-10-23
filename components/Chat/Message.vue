@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import clickOutside from '~/plugins/click-outside.client';
-
 const props = defineProps<{
 		text: string;
 		id: number;
