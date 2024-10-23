@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const chatStore = useChatStore(),
+	tooltipStore = useTooltipStore(),
 	refContent = useTemplateRef('content-ref'),
 	data = reactive({
 		inputField: '',
@@ -33,6 +34,7 @@ const chatStore = useChatStore(),
 				});
 				data.inputField = '';
 				chatStore.data.isEditMode = false;
+				tooltipStore.data.isTooltipVisible = false;
 			}
 		},
 		cancelEditMode: () => {
@@ -47,9 +49,9 @@ const chatStore = useChatStore(),
 		<div class="content">
 			<div class="messages-block" ref="content-ref">
 				<ChatMessage
+					v-for="(item, index) in calculated.messages.value"
 					@edit="methods.editMode"
 					@contextmenu="data.idTooltip = index"
-					v-for="(item, index) in calculated.messages.value"
 					:key="index"
 					:text="item"
 					:id="index"

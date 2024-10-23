@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import clickOutside from '~/plugins/click-outside.client';
+
 const props = defineProps<{
 		text: string;
 		id: number;
@@ -7,30 +9,34 @@ const props = defineProps<{
 	emit = defineEmits<{
 		(e: 'edit', text: string, id: number): void;
 	}>(),
+	messageRef = ref(),
+	tooltipRef = ref(),
 	chatStore = useChatStore(),
+	tooltipStore = useTooltipStore(),
 	data = reactive({
-		isTooltipVisible: false,
 		myTooltip: null as null | number,
 	}),
 	calculated = {
 		isEditMode: computed(() => chatStore.data.isEditMode),
+		isTooltipVisible: computed(
+			() => tooltipStore.data.isTooltipVisible && props.idTooltip === props.id
+		),
 	},
 	methods = {
 		listener: () => {
-			const block = document.getElementById('msgContent') as HTMLElement;
+			const block = document.getElementById(props.id) as HTMLElement;
 			block.addEventListener('contextmenu', () => {
-				data.isTooltipVisible = true;
+				tooltipStore.data.isTooltipVisible = true;
 			});
 		},
 		deleteMessage: (id: number) => {
 			chatStore.data.messages.forEach((item: string, i: number) => {
-				console.log(i, id);
 				i === id ? chatStore.data.messages.splice(i, 1) : false;
 			});
 		},
 		copyText: () => {
 			navigator.clipboard.writeText(props.text);
-			data.isTooltipVisible = false;
+			tooltipStore.data.isTooltipVisible = false;
 		},
 	};
 onMounted(() => {
@@ -43,14 +49,24 @@ onMounted(() => {
 		class="c-message"
 		@my-tooltip="(index: number) => (data.myTooltip = index)"
 	>
-		<div class="tooltip" v-if="idTooltip === id && data.isTooltipVisible">
+		<div
+			class="tooltip"
+			v-if="calculated.isTooltipVisible.value"
+			ref="tooltipRef"
+			v-click-outside="() => (tooltipStore.data.isTooltipVisible = false)"
+		>
 			<span class="option" @click="emit('edit', text, id)">Редактировать</span>
 			<span class="option" @click="methods.copyText">Копировать текст</span>
 			<span class="option --delete" @click="methods.deleteMessage(id)"
 				>Удалить</span
 			>
 		</div>
-		<span oncontextmenu="return false" class="content" id="msgContent">
+		<span
+			oncontextmenu="return false"
+			class="content"
+			:id="id"
+			ref="messageRef"
+		>
 			<span class="text">{{ text }}</span>
 		</span>
 	</div>
@@ -58,6 +74,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .c-message {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: end;
@@ -85,6 +102,7 @@ onMounted(() => {
 }
 
 .tooltip {
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -97,6 +115,7 @@ onMounted(() => {
 	padding: 10px 5px;
 	border-radius: 10px;
 	z-index: 2;
+	bottom: 50px;
 
 	.option {
 		transition: 0.2s ease-in-out;

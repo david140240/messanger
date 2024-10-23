@@ -1,6 +1,6 @@
 export const useChatStore = defineStore('chat', () => {
 	const data = reactive({
-		messages: [] as any,
+		messages: ['a', 'b', '123'] as any,
 		isEditMode: false,
 	});
 
