@@ -22,6 +22,7 @@ const chatStore = useChatStore(),
 		},
 		editMode: (text: string, id: number) => {
 			chatStore.data.isEditMode = true;
+			tooltipStore.data.isTooltipVisible = false;
 			data.inputField = text;
 			data.idMessage = id;
 		},
