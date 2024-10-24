@@ -6,6 +6,7 @@ const chatStore = useChatStore(),
 		inputField: '',
 		idMessage: null as number | null,
 		idTooltip: null as number | null,
+		sendTimeMessage: null as string | null,
 	}),
 	calculated = {
 		messages: computed(() => chatStore.data.messages),
@@ -14,11 +15,18 @@ const chatStore = useChatStore(),
 	methods = {
 		sendMessage: () => {
 			if (data.inputField.length) {
+				data.sendTimeMessage = methods.formatingTime(new Date());
 				chatStore.methods.addMessage(data.inputField);
 				const height = refContent.value?.scrollHeight;
 				refContent.value?.scrollTo(0, height as number);
 				data.inputField = '';
 			}
+		},
+		formatingTime: (time: Date) => {
+			return time.toLocaleTimeString('en-GB', {
+				hour: '2-digit',
+				minute: '2-digit',
+			});
 		},
 		editMode: (text: string, id: number) => {
 			chatStore.data.isEditMode = true;
@@ -26,16 +34,14 @@ const chatStore = useChatStore(),
 			data.inputField = text;
 			data.idMessage = id;
 		},
-		saveChanges: (id: number | null) => {
+		saveChanges: (id: number) => {
 			if (data.inputField.length) {
-				chatStore.data.messages.forEach((item: string, index: number) => {
-					if (id === index) {
-						chatStore.data.messages.splice(index, 1, data.inputField);
-					}
-				});
+				chatStore.data.messages[id].text = data.inputField;
+				chatStore.data.messages[id].isEdited = true;
 				data.inputField = '';
 				chatStore.data.isEditMode = false;
 				tooltipStore.data.isTooltipVisible = false;
+				data.idMessage = id;
 			}
 		},
 		cancelEditMode: () => {
@@ -50,13 +56,15 @@ const chatStore = useChatStore(),
 		<div class="content">
 			<div class="messages-block" ref="content-ref">
 				<ChatMessage
-					v-for="(item, index) in calculated.messages.value"
+					v-for="(item, index) in chatStore.data.messages"
 					@edit="methods.editMode"
 					@contextmenu="data.idTooltip = index"
 					:key="index"
-					:text="item"
+					:text="item.text"
+					:edit-flag="item.isEdited"
 					:id="index"
 					:id-tooltip="data.idTooltip"
+					:send-time="data.sendTimeMessage"
 				/>
 			</div>
 			<div class="input-block">

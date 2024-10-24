@@ -3,6 +3,8 @@ const props = defineProps<{
 		text: string;
 		id: number;
 		idTooltip: number | null;
+		sendTime: string | null;
+		editFlag: boolean;
 	}>(),
 	emit = defineEmits<{
 		(e: 'edit', text: string, id: number): void;
@@ -66,6 +68,10 @@ onMounted(() => {
 			ref="messageRef"
 		>
 			<span class="text">{{ text }}</span>
+			<div class="info">
+				<span class="edit-flag" v-if="editFlag">изменнено</span>
+				<span class="time">{{ sendTime }}</span>
+			</div>
 		</span>
 	</div>
 </template>
@@ -87,6 +93,10 @@ onMounted(() => {
 	}
 
 	.content {
+		display: flex;
+		flex-direction: row;
+		align-items: end;
+		gap: 8px;
 		width: fit-content;
 		padding: 10px;
 		background-color: white;
@@ -95,6 +105,23 @@ onMounted(() => {
 		.text {
 			font-size: 20px;
 			font-family: 'Courier New', Courier, monospace;
+		}
+
+		.info {
+			display: flex;
+			gap: 7px;
+			width: min-content;
+
+			.edit-flag {
+				font-size: 13px;
+			}
+
+			.time {
+				width: min-content;
+				font-size: 14px;
+				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+					sans-serif;
+			}
 		}
 	}
 }

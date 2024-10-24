@@ -1,16 +1,19 @@
 export const useChatStore = defineStore('chat', () => {
 	const data = reactive({
 		messages: [
-			'Привет!',
-			'Как дела?!',
-			'Тестовое сообщение очень длинное ваще сильно сильно',
+			{ text: 'Привет!', isEdited: false },
+			{ text: 'Как дела?!', isEdited: false },
+			{
+				text: 'Тестовое сообщение очень длинное ваще сильно сильно',
+				isEdited: false,
+			},
 		] as any,
 		isEditMode: false,
 	});
 
 	const methods = {
 		addMessage: (n: string) => {
-			data.messages.push(n);
+			data.messages.push({ text: n, isEdited: false });
 		},
 	};
 
