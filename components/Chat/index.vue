@@ -1,25 +1,27 @@
 <template>
-    <div class="c-chat">
-        <div class="chat-content">
-            <ChatPanel />
-            <ChatField />
-        </div>
-    </div>
+	<div class="c-chat">
+		<div class="chat-content">
+			<ChatPanel />
+			<ChatField />
+		</div>
+	</div>
 </template>
 
 <style lang="scss" scoped>
-    .c-chat {
-        display: flex;
-        margin: 0 auto;
-        height: 800px;
-        width: auto;
-        background-color: rgb(78, 199, 255);
-        border-radius: 20px;
-        overflow: hidden;
+.c-chat {
+	display: flex;
+	margin: 0 auto;
+	height: 800px;
+	width: auto;
+	border-radius: 20px;
+	overflow: hidden;
+	-webkit-box-shadow: 1px 3px 38px -10px rgba(34, 60, 80, 0.2);
+	-moz-box-shadow: 1px 3px 38px -10px rgba(34, 60, 80, 0.2);
+	box-shadow: 1px 3px 38px -10px rgba(34, 60, 80, 0.2);
 
-        .chat-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-        }
-    }
+	.chat-content {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+	}
+}
 </style>

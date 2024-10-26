@@ -33,6 +33,7 @@ const props = defineProps<{
 			chatStore.data.messages.forEach((item: string, i: number) => {
 				i === id ? chatStore.data.messages.splice(i, 1) : false;
 			});
+			tooltipStore.data.isTooltipVisible = false;
 		},
 		copyText: () => {
 			navigator.clipboard.writeText(props.text);
@@ -101,9 +102,17 @@ onMounted(() => {
 		padding: 10px;
 		background-color: white;
 		border-radius: 10px;
+		border: 0.5px gray solid;
+		transition: 0.2s;
+		margin-right: 20px;
+
+		&:hover {
+			background-color: rgb(242, 242, 242);
+			cursor: default;
+		}
 
 		.text {
-			font-size: 20px;
+			font-size: 16px;
 			font-family: 'Courier New', Courier, monospace;
 		}
 
@@ -118,7 +127,8 @@ onMounted(() => {
 
 			.time {
 				width: min-content;
-				font-size: 14px;
+				color: rgb(165, 165, 165);
+				font-size: 12px;
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
 					sans-serif;
 			}
@@ -128,10 +138,11 @@ onMounted(() => {
 
 .tooltip {
 	position: absolute;
+	min-width: max-content;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	justify-content: start;
+	align-items: start;
 	width: fit-content;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: 800;
@@ -141,16 +152,21 @@ onMounted(() => {
 	border-radius: 10px;
 	z-index: 2;
 	bottom: 50px;
+	-webkit-box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
+	-moz-box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
+	box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
 
 	.option {
 		transition: 0.2s ease-in-out;
 		padding: 5px;
 		border-radius: 5px;
 		box-sizing: border-box;
+		min-width: 100%;
+		width: 100%;
 
 		&:hover {
 			background-color: rgb(230, 230, 230);
-			cursor: pointer;
+			cursor: default;
 		}
 
 		&.--delete {

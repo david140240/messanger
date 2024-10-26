@@ -104,24 +104,25 @@ const chatStore = useChatStore(),
 	width: 100%;
 	height: 100%;
 	width: 600px;
+	padding: 20px 0;
+	background-color: white;
 
 	.content {
-		display: flex;
-		flex-direction: column;
-		padding: 20px;
 		width: 100%;
 		height: 100%;
 		box-sizing: border-box;
 
 		.messages-block {
-			display: flex;
+			display: grid;
 			flex-direction: column;
 			justify-content: end;
 			gap: 20px;
 			padding: 20px 0;
 			height: 670px;
 			overflow: auto;
-			scrollbar-width: none;
+			scrollbar-width: thin;
+			scrollbar-gutter: stable;
+			overflow-y: scroll;
 		}
 
 		.input-block {
@@ -131,7 +132,7 @@ const chatStore = useChatStore(),
 			gap: 10px;
 			align-self: flex-end;
 			bottom: 5px;
-			width: 100%;
+			padding: 0 20px;
 
 			.edit-accept-btn {
 				width: 50px;
