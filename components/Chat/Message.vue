@@ -84,6 +84,7 @@ onMounted(() => {
 	flex-direction: column;
 	align-items: end;
 	gap: 5px;
+	padding: 0 20px;
 
 	&.me {
 		justify-content: end;
@@ -127,7 +128,7 @@ onMounted(() => {
 
 			.time {
 				width: min-content;
-				color: rgb(221, 221, 221);
+				color: rgb(255, 255, 255);
 				font-size: 12px;
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
 					sans-serif;

@@ -80,7 +80,7 @@ const chatStore = useChatStore(),
 					class="chat-input"
 					placeholder="Введите сообщение..."
 					v-model="data.inputField"
-					@keyup.enter="methods.sendMessage"
+					@keyup.enter="methods.apply(data.idMessage)"
 				/>
 				<div
 					:class="['send-btn', { '--disabled': !data.inputField.length }]"
@@ -90,13 +90,6 @@ const chatStore = useChatStore(),
 						:src="`${$config.public.baseURL}/_nuxt/images/${calculated.btnIcons.value}.svg`"
 					/>
 				</div>
-				<button
-					v-if="calculated.isEditMode.value"
-					class="edit-accept-btn"
-					@click="methods.cancelEditMode"
-				>
-					отмена
-				</button>
 			</div>
 		</div>
 	</div>
@@ -105,7 +98,7 @@ const chatStore = useChatStore(),
 <style lang="scss" scoped>
 .c-chat-field {
 	height: 100%;
-	padding: 20px;
+	padding: 20px 0;
 	background-color: rgb(239, 239, 239);
 
 	.content {
@@ -132,6 +125,7 @@ const chatStore = useChatStore(),
 			gap: 10px;
 			align-self: flex-end;
 			bottom: 5px;
+			padding: 0 20px;
 
 			.edit-accept-btn {
 				width: 50px;
