@@ -100,20 +100,20 @@ onMounted(() => {
 		gap: 8px;
 		width: fit-content;
 		padding: 10px;
-		background-color: white;
+		background-color: rgb(56, 176, 255);
+		color: white;
 		border-radius: 10px;
-		border: 0.5px gray solid;
 		transition: 0.2s;
-		margin-right: 20px;
 
 		&:hover {
-			background-color: rgb(242, 242, 242);
 			cursor: default;
 		}
 
 		.text {
 			font-size: 16px;
-			font-family: 'Courier New', Courier, monospace;
+			color: white;
+			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+				'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 		}
 
 		.info {
@@ -127,7 +127,7 @@ onMounted(() => {
 
 			.time {
 				width: min-content;
-				color: rgb(165, 165, 165);
+				color: rgb(221, 221, 221);
 				font-size: 12px;
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
 					sans-serif;

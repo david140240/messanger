@@ -10,7 +10,10 @@ const chatStore = useChatStore(),
 	}),
 	calculated = {
 		messages: computed(() => chatStore.data.messages),
-		isEditMode: computed(() => chatStore.data.isEditMode),
+		isEditMode: computed((): boolean => chatStore.data.isEditMode),
+		btnIcons: computed((): string => {
+			return chatStore.data.isEditMode ? 'check' : 'paper-plane';
+		}),
 	},
 	methods = {
 		sendMessage: () => {
@@ -21,6 +24,11 @@ const chatStore = useChatStore(),
 				refContent.value?.scrollTo(0, height as number);
 				data.inputField = '';
 			}
+		},
+		apply: (id?: number) => {
+			chatStore.data.isEditMode
+				? methods.saveChanges(id as number)
+				: methods.sendMessage();
 		},
 		formatingTime: (time: Date) => {
 			return time.toLocaleTimeString('en-GB', {
@@ -76,17 +84,12 @@ const chatStore = useChatStore(),
 				/>
 				<div
 					:class="['send-btn', { '--disabled': !data.inputField.length }]"
-					@click="methods.sendMessage"
+					@click="methods.apply(data.idMessage)"
 				>
-					<img />
+					<img
+						:src="`${$config.public.baseURL}/_nuxt/images/${calculated.btnIcons.value}.svg`"
+					/>
 				</div>
-				<button
-					v-if="calculated.isEditMode.value"
-					class="edit-accept-btn"
-					@click="methods.saveChanges(data.idMessage)"
-				>
-					save
-				</button>
 				<button
 					v-if="calculated.isEditMode.value"
 					class="edit-accept-btn"
@@ -101,21 +104,18 @@ const chatStore = useChatStore(),
 
 <style lang="scss" scoped>
 .c-chat-field {
-	width: 100%;
 	height: 100%;
-	width: 600px;
-	padding: 20px 0;
-	background-color: white;
+	padding: 20px;
+	background-color: rgb(239, 239, 239);
 
 	.content {
 		width: 100%;
 		height: 100%;
-		box-sizing: border-box;
+		overflow-y: auto;
 
 		.messages-block {
-			display: grid;
+			display: flex;
 			flex-direction: column;
-			justify-content: end;
 			gap: 20px;
 			padding: 20px 0;
 			height: 670px;
@@ -132,7 +132,6 @@ const chatStore = useChatStore(),
 			gap: 10px;
 			align-self: flex-end;
 			bottom: 5px;
-			padding: 0 20px;
 
 			.edit-accept-btn {
 				width: 50px;
@@ -140,20 +139,25 @@ const chatStore = useChatStore(),
 
 			.chat-input {
 				font-size: 16px;
-				font-family: 'Courier New', Courier, monospace;
+				font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+					'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 				width: 100%;
-				height: 30px;
-				border-radius: 15px;
-				border: 1px gray solid;
-				padding: 5px;
+				min-height: 50px;
+				border-radius: 10px;
+				box-sizing: border-box;
+				border: 1px rgb(229, 229, 229) solid;
+				padding: 5px 15px;
 				outline: none;
 				outline-offset: 0;
 			}
 
 			.send-btn {
-				width: 50px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 70px;
 				height: 50px;
-				background-color: rgb(114, 187, 255);
+				background-color: rgb(191, 224, 255);
 				border-radius: 15px;
 				transition: 0.2s;
 
@@ -167,8 +171,12 @@ const chatStore = useChatStore(),
 				}
 
 				&:hover {
-					background-color: rgb(58, 160, 255);
-					cursor: pointer;
+					background-color: rgb(174, 216, 255);
+					cursor: default;
+				}
+
+				&:active {
+					background-color: rgb(144, 201, 255);
 				}
 			}
 		}

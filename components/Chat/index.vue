@@ -10,7 +10,7 @@
 <style lang="scss" scoped>
 .c-chat {
 	display: flex;
-	margin: 0 auto;
+	margin: auto;
 	height: 800px;
 	width: auto;
 	border-radius: 20px;

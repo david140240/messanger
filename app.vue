@@ -4,14 +4,10 @@
 	</NuxtLayout>
 </template>
 
-<style lang="scss" scoped>
-* {
+<style lang="scss">
+html {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100vh;
-	scrollbar-width: thin;
-	scrollbar-gutter: stable;
-	scrollbar-color: red;
 }
 </style>
