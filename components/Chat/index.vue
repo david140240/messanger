@@ -12,7 +12,7 @@
 	display: flex;
 	margin: auto;
 	height: 800px;
-	width: auto;
+	width: 930px;
 	border-radius: 20px;
 	overflow: hidden;
 	-webkit-box-shadow: 1px 3px 38px -10px rgba(34, 60, 80, 0.2);
@@ -22,6 +22,7 @@
 	.chat-content {
 		display: grid;
 		grid-template-columns: 1fr 2fr;
+		width: 100%;
 	}
 }
 </style>

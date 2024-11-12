@@ -50,18 +50,24 @@ onMounted(() => {
 		class="c-message"
 		@my-tooltip="(index: number) => (data.myTooltip = index)"
 	>
-		<div
-			class="tooltip"
+		<DropList
 			v-if="calculated.isTooltipVisible.value"
 			ref="tooltipRef"
 			v-click-outside="() => (tooltipStore.data.isTooltipVisible = false)"
+			:right="15"
+			:bottomn="50"
 		>
-			<span class="option" @click="emit('edit', text, id)">Редактировать</span>
-			<span class="option" @click="methods.copyText">Копировать текст</span>
-			<span class="option --delete" @click="methods.deleteMessage(id)"
-				>Удалить</span
-			>
-		</div>
+			<template #content>
+				<span class="option" @click="emit('edit', text, id)"
+					>Редактировать</span
+				>
+				<span class="option" @click="methods.copyText">Копировать текст</span>
+				<span class="option --delete" @click="methods.deleteMessage(id)"
+					>Удалить</span
+				>
+			</template>
+		</DropList>
+
 		<span
 			oncontextmenu="return false"
 			class="content"
@@ -135,46 +141,27 @@ onMounted(() => {
 			}
 		}
 	}
-}
 
-.tooltip {
-	position: absolute;
-	min-width: max-content;
-	display: flex;
-	flex-direction: column;
-	justify-content: start;
-	align-items: start;
-	width: fit-content;
-	font-family: 'Courier New', Courier, monospace;
-	font-weight: 800;
-	font-size: 15px;
-	background-color: white;
-	padding: 10px 5px;
-	border-radius: 10px;
-	z-index: 2;
-	bottom: 50px;
-	-webkit-box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
-	-moz-box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
-	box-shadow: 1px 9px 48px -19px rgba(34, 60, 80, 0.48);
-
-	.option {
-		transition: 0.2s ease-in-out;
-		padding: 5px;
-		border-radius: 5px;
-		box-sizing: border-box;
-		min-width: 100%;
-		width: 100%;
-
-		&:hover {
-			background-color: rgb(230, 230, 230);
-			cursor: default;
-		}
-
-		&.--delete {
-			color: red;
+	.droplist {
+		.option {
+			transition: 0.2s ease-in-out;
+			padding: 5px;
+			border-radius: 5px;
+			box-sizing: border-box;
+			min-width: 100%;
+			width: 100%;
 
 			&:hover {
-				background-color: rgb(255, 210, 210);
+				background-color: rgb(230, 230, 230);
+				cursor: default;
+			}
+
+			&.--delete {
+				color: red;
+
+				&:hover {
+					background-color: rgb(255, 210, 210);
+				}
 			}
 		}
 	}
