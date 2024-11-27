@@ -23,7 +23,7 @@ const data = reactive({
 	height: 100%;
 
 	&.--light {
-		background-color: white;
+		background-color: #fff8e7;
 	}
 
 	&.--dark {
