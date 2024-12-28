@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { MESSAGES } from '@/const/MessagesPreset';
+
 const chatStore = useChatStore(),
 	tooltipStore = useTooltipStore(),
-	refContent = useTemplateRef('content-ref'),
+	messagesBlock = useTemplateRef('messages-block'),
+	refBottom = ref(null),
 	data = reactive({
 		inputField: '',
-		idMessage: null as number | null,
-		idTooltip: null as number | null,
+		editingMessage: '',
+		idMessage: NaN as number,
+		idTooltip: NaN as number,
 		sendTimeMessage: null as string | null,
+		dynamicHeight: NaN as number,
 	}),
 	calculated = {
 		messages: computed(() => chatStore.data.messages),
@@ -16,19 +22,22 @@ const chatStore = useChatStore(),
 		}),
 	},
 	methods = {
-		sendMessage: () => {
+		sendMessage: async () => {
 			if (data.inputField.length) {
 				data.sendTimeMessage = methods.formatingTime(new Date());
-				chatStore.methods.addMessage(data.inputField);
-				const height = refContent.value?.scrollHeight;
-				refContent.value?.scrollTo(0, height as number);
+				await chatStore.methods.addMessage(data.inputField);
 				data.inputField = '';
+				methods.scrollToLastMessage();
 			}
 		},
 		apply: (id?: number) => {
 			chatStore.data.isEditMode
 				? methods.saveChanges(id as number)
 				: methods.sendMessage();
+		},
+		scrollToLastMessage: () => {
+			const height = messagesBlock.value?.scrollHeight;
+			messagesBlock.value?.scrollTo(0, height);
 		},
 		formatingTime: (time: Date) => {
 			return time.toLocaleTimeString('en-GB', {
@@ -41,12 +50,15 @@ const chatStore = useChatStore(),
 			tooltipStore.data.isTooltipVisible = false;
 			data.inputField = text;
 			data.idMessage = id;
+			data.editingMessage = text;
+			methods.scrollToLastMessage();
 		},
 		saveChanges: (id: number) => {
 			if (data.inputField.length) {
 				chatStore.data.messages[id].text = data.inputField;
 				chatStore.data.messages[id].isEdited = true;
 				data.inputField = '';
+				data.editingMessage = '';
 				chatStore.data.isEditMode = false;
 				tooltipStore.data.isTooltipVisible = false;
 				data.idMessage = id;
@@ -54,15 +66,47 @@ const chatStore = useChatStore(),
 		},
 		cancelEditMode: () => {
 			data.inputField = '';
+			data.editingMessage = '';
 			chatStore.data.isEditMode = false;
 		},
+		calculateHeight: () => {
+			if (refBottom.value) {
+				if (chatStore.data.isEditMode) {
+					data.dynamicHeight = 800 - 116;
+				} else {
+					data.dynamicHeight = 720;
+				}
+			}
+			methods.scrollToLastMessage();
+		},
 	};
+
+watch(
+	() => chatStore.data.isEditMode,
+	() => {
+		methods.calculateHeight();
+	}
+);
+
+watch(
+	() => messagesBlock.value,
+	n => {
+		if (n && import.meta.client) {
+			chatStore.data.messages.push(...MESSAGES);
+			methods.calculateHeight();
+		}
+	}
+);
 </script>
 
 <template>
 	<div class="c-chat-field">
 		<div class="content">
-			<div class="messages-block" ref="content-ref">
+			<div
+				class="messages-block"
+				ref="messages-block"
+				:style="{ height: `${data.dynamicHeight}px` }"
+			>
 				<ChatMessage
 					v-for="(item, index) in chatStore.data.messages"
 					@edit="methods.editMode"
@@ -75,20 +119,26 @@ const chatStore = useChatStore(),
 					:send-time="data.sendTimeMessage"
 				/>
 			</div>
-			<div class="input-block">
-				<input
-					class="chat-input"
-					placeholder="Введите сообщение..."
-					v-model="data.inputField"
-					@keyup.enter="methods.apply(data.idMessage)"
-				/>
+			<div class="input-block" ref="refBottom">
+				<div>
+					<div v-if="chatStore.data.isEditMode" class="editing-message-preview">
+						<span class="title"> Редактирование </span>
+						<span>
+							{{ data.editingMessage }}
+						</span>
+					</div>
+					<input
+						class="chat-input"
+						placeholder="Введите сообщение..."
+						v-model="data.inputField"
+						@keyup.enter="methods.apply(data.idMessage)"
+					/>
+				</div>
 				<div
 					:class="['send-btn', { '--disabled': !data.inputField.length }]"
 					@click="methods.apply(data.idMessage)"
 				>
-					<img
-						:src="`${$config.public.baseURL}/_nuxt/images/${calculated.btnIcons.value}.svg`"
-					/>
+					<img :src="`${calculated.btnIcons.value}.svg`" />
 				</div>
 			</div>
 		</div>
@@ -98,20 +148,18 @@ const chatStore = useChatStore(),
 <style lang="scss" scoped>
 .c-chat-field {
 	height: 100%;
-	padding: 20px 0;
 	background-color: rgb(239, 239, 239);
 
 	.content {
 		width: 100%;
 		height: 100%;
 		overflow-y: auto;
+		position: relative;
 
 		.messages-block {
 			display: flex;
 			flex-direction: column;
 			gap: 20px;
-			padding: 20px 0;
-			height: 670px;
 			overflow: auto;
 			scrollbar-width: thin;
 			scrollbar-gutter: stable;
@@ -120,29 +168,50 @@ const chatStore = useChatStore(),
 
 		.input-block {
 			display: flex;
-			justify-content: center;
-			align-items: center;
+			align-items: end;
 			gap: 10px;
 			align-self: flex-end;
-			bottom: 5px;
-			padding: 0 20px;
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			padding: 10px;
+			box-sizing: border-box;
+			background-color: #e7e7e7;
 
+			& > div {
+				width: 100%;
+
+				.editing-message-preview {
+					background-color: #ffffff;
+					color: #b3b3b3;
+					padding: 5px 15px;
+
+					& > span {
+						display: block;
+					}
+
+					.title {
+						color: black;
+						font-weight: 700;
+					}
+				}
+
+				.chat-input {
+					font-size: 16px;
+					font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+						'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+					width: 100%;
+					min-height: 50px;
+					border-radius: 10px;
+					box-sizing: border-box;
+					border: 1px rgb(229, 229, 229) solid;
+					padding: 5px 15px;
+					outline: none;
+					outline-offset: 0;
+				}
+			}
 			.edit-accept-btn {
 				width: 50px;
-			}
-
-			.chat-input {
-				font-size: 16px;
-				font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-					'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-				width: 100%;
-				min-height: 50px;
-				border-radius: 10px;
-				box-sizing: border-box;
-				border: 1px rgb(229, 229, 229) solid;
-				padding: 5px 15px;
-				outline: none;
-				outline-offset: 0;
 			}
 
 			.send-btn {

@@ -1,15 +1,7 @@
-<script lang="ts" setup>
-const data = reactive({
-		darkMode: false,
-	}),
-	calculated = {
-		isDarkMoode: computed(() => data.darkMode),
-	};
-</script>
+<script lang="ts" setup></script>
 
 <template>
-	<input type="checkbox" v-model="data.darkMode" />
-	<div :class="['app', { '--dark': calculated.isDarkMoode.value }]">
+	<div class="app">
 		<Chat />
 	</div>
 </template>

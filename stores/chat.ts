@@ -1,36 +1,6 @@
 export const useChatStore = defineStore('chat', () => {
 	const data = reactive({
-		messages: [
-			{ text: 'Привет!', isEdited: false },
-			{ text: 'Как дела?!', isEdited: false },
-			{
-				text: 'Тестовое сообщение очень длинное ваще сильно сильно',
-				isEdited: false,
-			},
-			{ text: 'Как дела?!', isEdited: false },
-			{ text: 'Привет!', isEdited: false },
-			{ text: 'Как дела?!', isEdited: false },
-			{
-				text: 'Тестовое сообщение очень длинное ваще сильно сильно',
-				isEdited: false,
-			},
-			{ text: 'Как дела?!', isEdited: false },
-			{ text: 'Привет!', isEdited: false },
-			{ text: 'Как дела?!', isEdited: false },
-			{
-				text: 'Тестовое сообщение очень длинное ваще сильно сильно',
-				isEdited: false,
-			},
-			{ text: 'Как дела?!', isEdited: false },
-			{ text: 'Как дела?!', isEdited: false },
-			{ text: 'Привет!', isEdited: false },
-			{ text: 'Как дела?!', isEdited: false },
-			{
-				text: 'Тестовое сообщение очень длинное ваще сильно сильно',
-				isEdited: false,
-			},
-			{ text: 'Как дела?!', isEdited: false },
-		] as any,
+		messages: [],
 		isEditMode: false,
 	});
 
