@@ -127,6 +127,7 @@ onMounted(() => {
 			display: flex;
 			gap: 7px;
 			width: min-content;
+			color: rgb(227, 227, 227);
 
 			.edit-flag {
 				font-size: 13px;
@@ -134,7 +135,6 @@ onMounted(() => {
 
 			.time {
 				width: min-content;
-				color: rgb(255, 255, 255);
 				font-size: 12px;
 				font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
 					sans-serif;

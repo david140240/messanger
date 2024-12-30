@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { MESSAGES } from '@/const/MessagesPreset';
+import { MESSAGES } from '~/constants/MessagesPreset';
 
 const chatStore = useChatStore(),
 	tooltipStore = useTooltipStore(),
@@ -72,9 +72,9 @@ const chatStore = useChatStore(),
 		calculateHeight: () => {
 			if (refBottom.value) {
 				if (chatStore.data.isEditMode) {
-					data.dynamicHeight = 800 - 116;
+					data.dynamicHeight = 800 - 145;
 				} else {
-					data.dynamicHeight = 720;
+					data.dynamicHeight = 705;
 				}
 			}
 			methods.scrollToLastMessage();
@@ -107,7 +107,11 @@ watch(
 				ref="messages-block"
 				:style="{ height: `${data.dynamicHeight}px` }"
 			>
+				<div class="empty" v-if="chatStore.data.messages.length === 0">
+					Начните общаться с кем-нибудь!
+				</div>
 				<ChatMessage
+					v-else
 					v-for="(item, index) in chatStore.data.messages"
 					@edit="methods.editMode"
 					@contextmenu="data.idTooltip = index"
@@ -123,7 +127,7 @@ watch(
 				<div>
 					<div v-if="chatStore.data.isEditMode" class="editing-message-preview">
 						<span class="title"> Редактирование </span>
-						<span>
+						<span class="editing-message">
 							{{ data.editingMessage }}
 						</span>
 					</div>
@@ -155,6 +159,7 @@ watch(
 		height: 100%;
 		overflow-y: auto;
 		position: relative;
+		align-items: flex-end;
 
 		.messages-block {
 			display: flex;
@@ -164,6 +169,15 @@ watch(
 			scrollbar-width: thin;
 			scrollbar-gutter: stable;
 			overflow-y: scroll;
+
+			.empty {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 20px;
+			}
 		}
 
 		.input-block {
@@ -173,7 +187,7 @@ watch(
 			align-self: flex-end;
 			position: absolute;
 			width: 100%;
-			bottom: 0;
+			bottom: 15px;
 			padding: 10px;
 			box-sizing: border-box;
 			background-color: #e7e7e7;
@@ -182,16 +196,26 @@ watch(
 				width: 100%;
 
 				.editing-message-preview {
-					background-color: #ffffff;
-					color: #b3b3b3;
-					padding: 5px 15px;
+					color: #6c6c6c;
+					padding: 5px;
+					font-family: 'Courier New', Courier, monospace;
+					border-left: 3px rgb(56, 176, 255) solid;
+
+					.editing-message {
+						-webkit-line-clamp: 1;
+						line-clamp: 1;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						overflow: hidden;
+					}
 
 					& > span {
 						display: block;
 					}
 
 					.title {
-						color: black;
+						color: rgb(56, 176, 255);
 						font-weight: 700;
 					}
 				}

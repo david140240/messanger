@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-const data = reactive({
+const chatStore = useChatStore(),
+	data = reactive({
 		isActive: false,
 		activeIndex: null as null | number,
 	}),
@@ -7,6 +8,7 @@ const data = reactive({
 		toogleActive: (index: number) => {
 			data.isActive = true;
 			data.activeIndex = index;
+			chatStore.methods.setMessages(index);
 		},
 	};
 </script>
