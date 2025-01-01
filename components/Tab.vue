@@ -12,8 +12,6 @@ const props = defineProps<{
 			return props.isActive && props.activeIndex === props.index;
 		}),
 	};
-
-watch(() => props.activeIndex, console.log(props.activeIndex));
 </script>
 
 <template>

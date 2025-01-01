@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { MESSAGES } from '~/constants/MessagesPreset';
 
 const chatStore = useChatStore(),
 	tooltipStore = useTooltipStore(),
@@ -88,15 +87,9 @@ watch(
 	}
 );
 
-watch(
-	() => messagesBlock.value,
-	n => {
-		if (n && import.meta.client) {
-			chatStore.data.messages.push(...MESSAGES);
-			methods.calculateHeight();
-		}
-	}
-);
+onMounted(() => {
+	methods.calculateHeight();
+});
 </script>
 
 <template>
@@ -107,8 +100,17 @@ watch(
 				ref="messages-block"
 				:style="{ height: `${data.dynamicHeight}px` }"
 			>
-				<div class="empty" v-if="chatStore.data.messages.length === 0">
-					Начните общаться с кем-нибудь!
+				<div
+					class="empty"
+					v-if="
+						chatStore.data.messages?.length === 0 || !chatStore.data.messages
+					"
+				>
+					{{
+						!chatStore.data.messages
+							? 'Начните общаться с кем-нибудь!'
+							: 'Напиишите первыми сообщение!'
+					}}
 				</div>
 				<ChatMessage
 					v-else
@@ -164,11 +166,12 @@ watch(
 		.messages-block {
 			display: flex;
 			flex-direction: column;
-			gap: 20px;
+			gap: 10px;
 			overflow: auto;
 			scrollbar-width: thin;
 			scrollbar-gutter: stable;
 			overflow-y: scroll;
+			padding: 5px 0;
 
 			.empty {
 				width: 100%;
