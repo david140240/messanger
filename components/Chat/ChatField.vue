@@ -75,6 +75,8 @@ const chatStore = useChatStore(),
 				} else {
 					data.dynamicHeight = 705;
 				}
+			} else {
+				data.dynamicHeight = 705;
 			}
 			methods.scrollToLastMessage();
 		},
@@ -108,8 +110,8 @@ onMounted(() => {
 				>
 					{{
 						!chatStore.data.messages
-							? 'Начните общаться с кем-нибудь!'
-							: 'Напиишите первыми сообщение!'
+							? 'Выберите, с кем хотели бы пообщаться'
+							: 'Начните общение!'
 					}}
 				</div>
 				<ChatMessage
@@ -125,7 +127,7 @@ onMounted(() => {
 					:send-time="data.sendTimeMessage"
 				/>
 			</div>
-			<div class="input-block" ref="refBottom">
+			<div class="input-block" ref="refBottom" v-if="chatStore.data.messages">
 				<div>
 					<div v-if="chatStore.data.isEditMode" class="editing-message-preview">
 						<span class="title"> Редактирование </span>
