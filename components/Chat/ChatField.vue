@@ -26,6 +26,8 @@
         },
         methods = {
             context: (text, id, event) => {
+                tooltipStore.data.isTooltipVisible = false;
+                tooltipStore.data.isTooltipVisible = true;
                 data.messageText = text;
                 data.idTooltip = id;
                 data.cursorX = event.layerX > 430 ? 430 : event.layerX;

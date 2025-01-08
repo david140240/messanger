@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+    import { MESSAGES } from "~/constants/MessagesPreset";
+
     const chatStore = useChatStore(),
         data = reactive({
             isActive: false,
@@ -20,10 +22,12 @@
             <div class="tab-list">
                 <Tab
                     @click="methods.toogleActive(index)"
-                    v-for="(i, index) in 5"
+                    v-for="(item, index) in MESSAGES"
                     :index="index"
                     :isActive="data.isActive"
                     :activeIndex="data.activeIndex"
+                    :username="item.username"
+                    :lastMessage="item.messages[item.messages.length - 1]?.text"
                 />
             </div>
         </div>
