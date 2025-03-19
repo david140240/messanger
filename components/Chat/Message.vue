@@ -6,11 +6,11 @@ const props = defineProps<{
 		sendTime: string | null;
 		editFlag: boolean;
 	}>(),
-	emit = defineEmits<{
+	emits = defineEmits<{
 		(e: 'edit', text: string, id: number): void;
+		(e: 'emit-node', node: HTMLElement): void;
 	}>(),
 	messageRef = ref(),
-	tooltipRef = ref(),
 	chatStore = useChatStore(),
 	tooltipStore = useTooltipStore(),
 	data = reactive({
@@ -30,6 +30,14 @@ const props = defineProps<{
 			});
 		},
 	};
+
+watch(
+	() => messageRef.value,
+	n => {
+		emits('emit-node', n);
+	}
+);
+
 onMounted(() => {
 	methods.listener();
 });
